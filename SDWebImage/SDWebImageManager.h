@@ -160,6 +160,7 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  */
 + (SDWebImageManager *)sharedManager;
 
+
 /**
  * Downloads the image at the given URL if not present in cache or return the cached version otherwise.
  *
@@ -201,5 +202,12 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  * Check if image has already been cached
  */
 - (BOOL)diskImageExistsForURL:(NSURL *)url;
+
+@end
+
+@interface SDWebImageManager (Decode)
+
++ (BOOL)isDecodeGIFImage;
++ (void)setIsDecodeGIFImage:(BOOL)isDecode;
 
 @end

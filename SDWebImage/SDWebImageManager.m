@@ -37,6 +37,15 @@
     return instance;
 }
 
+static BOOL _isDecodeGIF = YES;
++ (BOOL)isDecodeGIFImage {
+    return _isDecodeGIF;
+}
+
++ (void)setIsDecodeGIFImage:(BOOL)isDecode {
+    _isDecodeGIF = isDecode;
+}
+
 - (id)init {
     if ((self = [super init])) {
         _imageCache = [self createCache];
