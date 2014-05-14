@@ -71,9 +71,9 @@ typedef NS_OPTIONS(NSUInteger, SDWebImageOptions) {
     SDWebImageHighPriority = 1 << 8
 };
 
-typedef void(^SDWebImageCompletedBlock)(UIImage *image, NSError *error, SDImageCacheType cacheType);
+typedef void(^SDWebImageCompletedBlock)(UIImage *image, NSData* data, NSError *error, SDImageCacheType cacheType);
 
-typedef void(^SDWebImageCompletedWithFinishedBlock)(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished);
+typedef void(^SDWebImageCompletedWithFinishedBlock)(UIImage *image, NSData* data, NSError *error, SDImageCacheType cacheType, BOOL finished);
 
 
 @class SDWebImageManager;

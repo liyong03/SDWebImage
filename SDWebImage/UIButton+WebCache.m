@@ -40,7 +40,7 @@ static char operationKey;
 
     if (url) {
         __weak UIButton *wself = self;
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:nil completed:^(UIImage *image, NSData* data, NSError *error, SDImageCacheType cacheType, BOOL finished) {
             if (!wself) return;
             dispatch_main_sync_safe(^{
                 __strong UIButton *sself = wself;
@@ -49,7 +49,7 @@ static char operationKey;
                     [sself setImage:image forState:state];
                 }
                 if (completedBlock && finished) {
-                    completedBlock(image, error, cacheType);
+                    completedBlock(image, data, error, cacheType);
                 }
             });
         }];
@@ -84,7 +84,7 @@ static char operationKey;
 
     if (url) {
         __weak UIButton *wself = self;
-        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        id <SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:nil completed:^(UIImage *image, NSData* data, NSError *error, SDImageCacheType cacheType, BOOL finished) {
             if (!wself) return;
             dispatch_main_sync_safe(^{
                 __strong UIButton *sself = wself;
@@ -93,7 +93,7 @@ static char operationKey;
                     [sself setBackgroundImage:image forState:state];
                 }
                 if (completedBlock && finished) {
-                    completedBlock(image, error, cacheType);
+                    completedBlock(image, data, error, cacheType);
                 }
             });
         }];

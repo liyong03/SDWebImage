@@ -264,20 +264,20 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
     return SDScaledImageForKey(key, image);
 }
 
-- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, SDImageCacheType cacheType))doneBlock {
+- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, NSData *data, SDImageCacheType cacheType))doneBlock {
     NSOperation *operation = [NSOperation new];
 
     if (!doneBlock) return nil;
 
     if (!key) {
-        doneBlock(nil, SDImageCacheTypeNone);
+        doneBlock(nil, nil, SDImageCacheTypeNone);
         return nil;
     }
 
     // First check the in-memory cache...
     UIImage *image = [self imageFromMemoryCacheForKey:key];
     if (image) {
-        doneBlock(image, SDImageCacheTypeMemory);
+        doneBlock(image, nil, SDImageCacheTypeMemory);
         return nil;
     }
 
@@ -287,14 +287,22 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
         }
 
         @autoreleasepool {
-            UIImage *diskImage = [self diskImageForKey:key];
+            //UIImage *diskImage = [self diskImageForKey:key];
+            UIImage *diskImage = nil;
+            NSData *data = [self diskImageDataBySearchingAllPathsForKey:key];
+            if (data) {
+                diskImage = [UIImage sd_imageWithData:data];
+                diskImage = [self scaledImageForKey:key image:diskImage];
+                diskImage = [UIImage decodedImageWithImage:diskImage];
+            }
+
             if (diskImage) {
                 CGFloat cost = diskImage.size.height * diskImage.size.width * diskImage.scale;
                 [self.memCache setObject:diskImage forKey:key cost:cost];
             }
 
             dispatch_async(dispatch_get_main_queue(), ^{
-                doneBlock(diskImage, SDImageCacheTypeDisk);
+                doneBlock(diskImage, data, SDImageCacheTypeDisk);
             });
         }
     });

@@ -100,7 +100,7 @@ static BOOL _isDecodeGIF = YES;
     if (!url || (!(options & SDWebImageRetryFailed) && isFailedUrl)) {
         dispatch_main_sync_safe(^{
             NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil];
-            completedBlock(nil, error, SDImageCacheTypeNone, YES);
+            completedBlock(nil, nil, error, SDImageCacheTypeNone, YES);
         });
         return operation;
     }
@@ -110,7 +110,7 @@ static BOOL _isDecodeGIF = YES;
     }
     NSString *key = [self cacheKeyForURL:url];
 
-    operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType) {
+    operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, NSData *imgData, SDImageCacheType cacheType) {
         if (operation.isCancelled) {
             @synchronized (self.runningOperations) {
                 [self.runningOperations removeObject:operation];
@@ -124,7 +124,7 @@ static BOOL _isDecodeGIF = YES;
                 dispatch_main_sync_safe(^{
                     // If image was found in the cache bug SDWebImageRefreshCached is provided, notify about the cached image
                     // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
-                    completedBlock(image, nil, cacheType, YES);
+                    completedBlock(image, nil, nil, cacheType, YES);
                 });
             }
 
@@ -146,12 +146,12 @@ static BOOL _isDecodeGIF = YES;
             id <SDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished) {
                 if (weakOperation.isCancelled) {
                     dispatch_main_sync_safe(^{
-                        completedBlock(nil, nil, SDImageCacheTypeNone, finished);
+                        completedBlock(nil, nil, nil, SDImageCacheTypeNone, finished);
                     });
                 }
                 else if (error) {
                     dispatch_main_sync_safe(^{
-                        completedBlock(nil, error, SDImageCacheTypeNone, finished);
+                        completedBlock(nil, nil, error, SDImageCacheTypeNone, finished);
                     });
 
                     if (error.code != NSURLErrorNotConnectedToInternet) {
@@ -177,7 +177,7 @@ static BOOL _isDecodeGIF = YES;
                             }
 
                             dispatch_main_sync_safe(^{
-                                completedBlock(transformedImage, nil, SDImageCacheTypeNone, finished);
+                                completedBlock(transformedImage, data, nil, SDImageCacheTypeNone, finished);
                             });
                         });
                     }
@@ -187,7 +187,7 @@ static BOOL _isDecodeGIF = YES;
                         }
 
                         dispatch_main_sync_safe(^{
-                            completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished);
+                            completedBlock(downloadedImage, data, nil, SDImageCacheTypeNone, finished);
                         });
                     }
                 }
@@ -204,7 +204,7 @@ static BOOL _isDecodeGIF = YES;
         }
         else if (image) {
             dispatch_main_sync_safe(^{
-                completedBlock(image, nil, cacheType, YES);
+                completedBlock(image, imgData, nil, cacheType, YES);
             });
             @synchronized (self.runningOperations) {
                 [self.runningOperations removeObject:operation];
@@ -213,7 +213,7 @@ static BOOL _isDecodeGIF = YES;
         else {
             // Image not in cache and download disallowed by delegate
             dispatch_main_sync_safe(^{
-                completedBlock(nil, nil, SDImageCacheTypeNone, YES);
+                completedBlock(nil, imgData, nil, SDImageCacheTypeNone, YES);
             });
             @synchronized (self.runningOperations) {
                 [self.runningOperations removeObject:operation];
