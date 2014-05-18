@@ -203,6 +203,11 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  */
 - (BOOL)diskImageExistsForURL:(NSURL *)url;
 
+/**
+ * Get cache path for image with url
+ */
+- (NSString*)diskImagePathForURL:(NSURL*)url;
+
 @end
 
 @interface SDWebImageManager (Decode)
