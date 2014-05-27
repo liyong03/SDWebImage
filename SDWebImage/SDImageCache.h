@@ -100,6 +100,13 @@ typedef void(^SDWebImageQueryCompletedBlock)(UIImage *image, NSData *data, SDIma
 - (void)storeImage:(UIImage *)image recalculateFromImage:(BOOL)recalculate imageData:(NSData *)imageData forKey:(NSString *)key toDisk:(BOOL)toDisk;
 
 /**
+ * Store image data to disk at the given key.
+ * @param image data to store
+ * @param key The unique image cache key, usually it's image absolute URL
+ */
+- (void)storeData:(NSData *)data toDiskForKey:(NSString *)key;
+
+/**
  * Query the disk cache asynchronously.
  *
  * @param key The unique key used to store the wanted image

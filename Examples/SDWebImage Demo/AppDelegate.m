@@ -20,7 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [SDWebImageManager setIsDecodeGIFImage:YES];
+    [SDWebImageManager setIsDecodeGIFImage:NO];
     //Add a custom read-only cache path
     NSString *bundledPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"CustomPathImages"];
     [[SDImageCache sharedImageCache] addReadOnlyCachePath:bundledPath];

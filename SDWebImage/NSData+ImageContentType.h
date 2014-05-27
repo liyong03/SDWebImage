@@ -7,4 +7,5 @@
 
 @interface NSData (ImageContentType)
 + (NSString *)contentTypeForImageData:(NSData *)data;
++ (BOOL)isImageData:(NSData *)data;
 @end

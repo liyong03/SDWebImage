@@ -7,6 +7,7 @@
  */
 
 #import "SDWebImageManager.h"
+#import "NSData+ImageContentType.h"
 #import <objc/message.h>
 
 @interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
@@ -119,7 +120,7 @@ static BOOL _isDecodeGIF = YES;
             return;
         }
 
-        if ((!image || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
+        if ((!(image || imgData) || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
             if (image && options & SDWebImageRefreshCached) {
                 dispatch_main_sync_safe(^{
                     // If image was found in the cache bug SDWebImageRefreshCached is provided, notify about the cached image
@@ -184,6 +185,8 @@ static BOOL _isDecodeGIF = YES;
                     else {
                         if (downloadedImage && finished) {
                             [self.imageCache storeImage:downloadedImage recalculateFromImage:NO imageData:data forKey:key toDisk:cacheOnDisk];
+                        } else if (finished && [NSData isImageData:data]) {
+                            [self.imageCache storeData:data toDiskForKey:key];
                         }
 
                         dispatch_main_sync_safe(^{

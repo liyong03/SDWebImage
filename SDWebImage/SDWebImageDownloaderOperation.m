@@ -9,6 +9,7 @@
 #import "SDWebImageDownloaderOperation.h"
 #import "SDWebImageDecoder.h"
 #import "UIImage+MultiFormat.h"
+#import "NSData+ImageContentType.h"
 #import <ImageIO/ImageIO.h>
 
 @interface SDWebImageDownloaderOperation ()
@@ -340,7 +341,7 @@
                 image = [UIImage decodedImageWithImage:image];
             }
 
-            if (CGSizeEqualToSize(image.size, CGSizeZero)) {
+            if (CGSizeEqualToSize(image.size, CGSizeZero) && (![NSData isImageData:self.imageData])) {
                 completionBlock(nil, nil, [NSError errorWithDomain:@"SDWebImageErrorDomain" code:0 userInfo:@{NSLocalizedDescriptionKey : @"Downloaded image has 0 pixels"}], YES);
             }
             else {
