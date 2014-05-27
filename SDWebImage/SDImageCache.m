@@ -221,6 +221,11 @@ BOOL ImageDataHasPNGPreffix(NSData *data) {
     return exists;
 }
 
+- (NSString*)diskImagePathWithKey:(NSString*)key
+{
+    return [self defaultCachePathForKey:key];
+}
+
 - (UIImage *)imageFromMemoryCacheForKey:(NSString *)key {
     return [self.memCache objectForKey:key];
 }

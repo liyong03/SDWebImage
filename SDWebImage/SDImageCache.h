@@ -191,4 +191,9 @@ typedef void(^SDWebImageQueryCompletedBlock)(UIImage *image, NSData *data, SDIma
  */
 - (BOOL)diskImageExistsWithKey:(NSString *)key;
 
+/**
+ * Get the cache path for key
+ */
+- (NSString*)diskImagePathWithKey:(NSString*)key;
+
 @end

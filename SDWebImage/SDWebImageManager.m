@@ -75,6 +75,12 @@ static BOOL _isDecodeGIF = YES;
     return [self.imageCache diskImageExistsWithKey:key];
 }
 
+- (NSString*)diskImagePathForURL:(NSURL*)url
+{
+    NSString *key = [self cacheKeyForURL:url];
+    return [self.imageCache diskImagePathWithKey:key];
+}
+
 - (id <SDWebImageOperation>)downloadWithURL:(NSURL *)url options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedWithFinishedBlock)completedBlock {
     // Invoking this method without a completedBlock is pointless
     NSParameterAssert(completedBlock);
